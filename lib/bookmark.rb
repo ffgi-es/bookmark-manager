@@ -12,6 +12,8 @@ class Bookmark
     con = PG.connect dbname: 'bookmark_manager', user: ENV['USER']
     rows = con.exec 'SELECT * FROM bookmarks'
     rows.reduce([]) { |res, row| res << Bookmark.new(row['id'], row['url']) }
+  ensure
+    con.close if con
   end
 
   def == other
