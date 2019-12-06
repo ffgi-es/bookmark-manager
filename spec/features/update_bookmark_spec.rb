@@ -4,7 +4,7 @@ feature "update bookmark" do
 
     visit '/bookmarks'
 
-    within('#' + bookmark.id.to_s) { click_button 'Update' }
+    within('#' + bookmark.id.to_s) { click_button 'Edit' }
 
     fill_in 'url', with: 'http://google.com'
     fill_in 'title', with: 'Google'

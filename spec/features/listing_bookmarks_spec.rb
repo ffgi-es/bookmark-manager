@@ -9,7 +9,6 @@ RSpec.feature 'interacting with bookmarks' do
     visit '/bookmarks'
     expect(page).to have_selector 'table'
     expect(page).to have_selector 'th', text: 'Name'
-    expect(page).to have_selector 'th', text: 'URL'
   end
 
   context 'listing bookmarks' do
