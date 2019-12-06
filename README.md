@@ -13,8 +13,8 @@
 | Bookmark | BookmarkList |
 |---|---|
 | `@url` | `@bookmarks` |
-| `@name` | |
-|-|-| 
+| `@title` | |
+|---|---| 
 | `#create(name, url)` | `#show` | 
 |   | `#size` | 
 
