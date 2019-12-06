@@ -33,4 +33,26 @@ RSpec.describe Bookmark do
       expect(bookmarks).to include Bookmark.new('Test 3', 'http://www.test_3.com')
     end
   end
+
+  describe '.create' do
+    it 'should return a Bookmark instance of the record saved' do
+      bookmark = Bookmark.create 'Create Test', 'https://creation.com'
+
+      expect(Bookmark.all).to include bookmark
+    end
+
+    it 'should throw an exception if url is already saved' do
+      pending
+      Bookmark.create 'First Bookmark', 'https://this_url.com'
+      expect { Bookmark.create 'Second Bookmark', 'https://this_url.com' }
+        .to raise_error DuplicateBookmarkError, "This url is already saved"
+    end
+
+    it 'should throw an exception if title already exists' do
+      pending
+      Bookmark.create 'First Bookmark', 'https://this_url.com'
+      expect { Bookmark.create 'First Bookmark', 'https://that_url.com' }
+        .to raise_error DuplicateBookmarkError, "This title is already in use"
+    end
+  end
 end

@@ -16,5 +16,12 @@
     </tr>
     <%= @bookmarks.map { |x| '<tr><td>' + x.title + '</td><td>' + x.url + '</td></tr>' }.join('') %>
   </table>
+
+  <form action='/bookmarks/add' method='post'>
+    <input type='text' name='title' placeholder='Title' required>
+    <input type='text' name='url' placeholder='URL' required>
+    <br>
+    <input type='submit' value='Save'>
+  </form>
 </body>
 </html>

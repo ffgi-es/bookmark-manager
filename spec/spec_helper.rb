@@ -37,6 +37,9 @@ Capybara.app = BookmarkManager
 
 RSpec.configure do |config|
   config.before(:each) { truncate_bookmarks }
+  config.backtrace_exclusion_patterns = [
+    /gems/
+  ]
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

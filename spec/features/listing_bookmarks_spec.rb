@@ -1,5 +1,5 @@
-RSpec.feature 'listing bookmarks' do
-  scenario 'it has a title' do
+RSpec.feature 'interacting with bookmarks' do
+  scenario 'there has a title' do
     visit '/bookmarks'
     expect(page).to have_content 'Bookmark Manager'
     expect(page).to have_title 'Bookmark Manager'
@@ -12,17 +12,11 @@ RSpec.feature 'listing bookmarks' do
     expect(page).to have_selector 'th', text: 'URL'
   end
 
-  context 'hardcoded contents' do
+  context 'listing bookmarks' do
     before :each do
-      begin
-        connection = PG.connect dbname: 'bookmark_manager_test'
-
-        connection.exec "INSERT INTO bookmarks (title, url) VALUES ('Test 1', 'http://www.test_1.com')"
-        connection.exec "INSERT INTO bookmarks (title, url) VALUES ('Test 2', 'http://www.test_2.com')"
-        connection.exec "INSERT INTO bookmarks (title, url) VALUES ('Test 3', 'http://www.test_3.com')"
-      ensure
-        connection.close if connection
-      end
+      Bookmark.create 'Test 1', 'http://www.test_1.com'
+      Bookmark.create 'Test 2', 'http://www.test_2.com'
+      Bookmark.create 'Test 3', 'http://www.test_3.com'
     end
 
     scenario 'it has default names' do
@@ -39,6 +33,19 @@ RSpec.feature 'listing bookmarks' do
       expect(page).to have_content 'http://www.test_1.com'
       expect(page).to have_content 'http://www.test_2.com'
       expect(page).to have_content 'http://www.test_3.com'
+    end
+  end
+
+  context 'adding bookmarks' do
+    scenario "filling in new bookmark info and saving a bookmark" do
+      visit '/bookmarks'
+
+      fill_in 'title', with: 'New Test Bookmark'
+      fill_in 'url', with: 'http://www.new_test_1.com'
+      click_button 'Save'
+
+      expect(page).to have_content 'New Test Bookmark'
+      expect(page).to have_content 'http://www.new_test_1.com'
     end
   end
 end
