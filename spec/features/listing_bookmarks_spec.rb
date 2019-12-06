@@ -19,20 +19,12 @@ RSpec.feature 'interacting with bookmarks' do
       Bookmark.create 'Test 3', 'http://www.test_3.com'
     end
 
-    scenario 'it has default names' do
+    scenario 'has links' do
       visit '/bookmarks'
 
-      expect(page).to have_content 'Test 1'
-      expect(page).to have_content 'Test 2'
-      expect(page).to have_content 'Test 3'
-    end
-
-    scenario 'it has default URLs' do
-      visit '/bookmarks'
-
-      expect(page).to have_content 'http://www.test_1.com'
-      expect(page).to have_content 'http://www.test_2.com'
-      expect(page).to have_content 'http://www.test_3.com'
+      expect(page).to have_link 'Test 1', href: 'http://www.test_1.com'
+      expect(page).to have_link 'Test 2', href: 'http://www.test_2.com'
+      expect(page).to have_link 'Test 3', href: 'http://www.test_3.com'
     end
   end
 
@@ -44,8 +36,21 @@ RSpec.feature 'interacting with bookmarks' do
       fill_in 'url', with: 'http://www.new_test_1.com'
       click_button 'Save'
 
-      expect(page).to have_content 'New Test Bookmark'
-      expect(page).to have_content 'http://www.new_test_1.com'
+      expect(page).to have_link 'New Test Bookmark', href: 'http://www.new_test_1.com'
+    end
+  end
+
+  context 'deleting bookmarks' do
+    scenario "clicking a button next to the link deletes the bookmark" do
+      bookmark = Bookmark.create 'Test 1', 'http://www.test_1.com'
+      Bookmark.create 'Test 2', 'http://www.test_2.com'
+
+      visit '/bookmarks'
+
+      within('#'+ bookmark.id.to_s) { click_button 'Delete' }
+
+      expect(page).not_to have_link 'Test 1', href: 'http://www.test_1.com'
+      expect(page).to have_link 'Test 2', href: 'http://www.test_2.com'
     end
   end
 end

@@ -2,12 +2,17 @@ require 'bookmark'
 require 'pg'
 
 RSpec.describe Bookmark do
+  let(:id) { 3 }
   let(:title) { 'Title' }
   let(:url) { 'URL' }
-  subject(:bookmark) { Bookmark.new(title, url) }
+  subject(:bookmark) { Bookmark.new(id, title, url) }
 
   it 'should have a title' do
     expect(subject).to have_attributes title: title
+  end
+
+  it 'should have an id' do
+    expect(subject).to have_attributes id: id
   end
 
   it 'should have a url' do
@@ -28,9 +33,16 @@ RSpec.describe Bookmark do
 
       bookmarks = Bookmark.all
 
-      expect(bookmarks).to include Bookmark.new('Test 1', 'http://www.test_1.com')
-      expect(bookmarks).to include Bookmark.new('Test 2', 'http://www.test_2.com')
-      expect(bookmarks).to include Bookmark.new('Test 3', 'http://www.test_3.com')
+      titles = ['Test 1', 'Test 2', 'Test 3']
+      urls = ['http://www.test_1.com',
+              'http://www.test_2.com',
+              'http://www.test_3.com']
+
+      bookmarks.each do |bmark|
+        expect(bmark).to be_instance_of Bookmark
+        expect(titles).to include bmark.title
+        expect(urls).to include bmark.url
+      end
     end
   end
 
@@ -53,6 +65,20 @@ RSpec.describe Bookmark do
       Bookmark.create 'First Bookmark', 'https://this_url.com'
       expect { Bookmark.create 'First Bookmark', 'https://that_url.com' }
         .to raise_error DuplicateBookmarkError, "This title is already in use"
+    end
+  end
+
+  describe ".delete" do
+    it "should remove the bookmark from the database" do
+      bookmark = Bookmark.create "Test 1", "https://test_1.com"
+      Bookmark.create "Test 2", "https://test_2.com"
+
+      Bookmark.delete(bookmark.id)
+      
+      bookmarks = Bookmark.all
+
+      expect(bookmarks.length).to eq 1
+      expect(bookmarks).not_to include bookmark
     end
   end
 end

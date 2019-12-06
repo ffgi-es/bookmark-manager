@@ -1,15 +1,16 @@
 require 'pg'
 
 class Bookmark
-  attr_reader :title, :url
+  attr_reader :id, :title, :url
 
-  def initialize(title, url)
+  def initialize(id, title, url)
+    @id = id
     @title = title
     @url = url
   end
 
   def == other
-    title == other.title && url == other.url
+    id = other.id && title == other.title && url == other.url
   end
 
   def self.all
@@ -17,7 +18,7 @@ class Bookmark
       con.exec 'SELECT * FROM bookmarks'
     end
 
-    rows.reduce([]) { |res, row| res << Bookmark.new(row['title'], row['url']) }
+    rows.reduce([]) { |res, row| res << Bookmark.new(row['id'], row['title'], row['url']) }
   end
 
   def self.create title, url
@@ -25,7 +26,13 @@ class Bookmark
       con.exec "INSERT INTO bookmarks (title,url) VALUES ('#{title}', '#{url}') RETURNING id, title, url"
     end
 
-    Bookmark.new(rows[0]['title'], rows[0]['url'])
+    Bookmark.new(rows[0]['id'], rows[0]['title'], rows[0]['url'])
+  end
+
+  def self.delete id
+    connect_to_db do |con|
+      con.exec "DELETE FROM bookmarks WHERE id = #{id}"
+    end
   end
 
   private

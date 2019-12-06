@@ -14,7 +14,18 @@
       <th>Name</th>
       <th>URL</th>
     </tr>
-    <%= @bookmarks.map { |x| '<tr><td>' + x.title + '</td><td>' + x.url + '</td></tr>' }.join('') %>
+    <% @bookmarks.each do |bmark| %>
+      <tr>
+        <td><a href=<%=bmark.url.inspect%>><%=bmark.title%></a></td>
+        <td>
+          <div id='<%=bmark.id%>'>
+            <form action='/bookmarks/delete' method='post'>
+              <input type='hidden' name='id' value=<%=bmark.id%>>
+              <input type=submit value='Delete'>
+            </form>
+          </div>
+      </tr>
+    <% end %>
   </table>
 
   <form action='/bookmarks/add' method='post'>
