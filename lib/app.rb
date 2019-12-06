@@ -3,7 +3,7 @@ require_relative 'bookmark'
 
 class BookmarkManager < Sinatra::Base
   get '/' do
-    'Bookmark Manager'
+    redirect '/bookmarks'
   end
   
   get '/bookmarks' do

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>Bookmark Manager</title>
 </head>
 <body>
   <h1>Bookmark Manager</h1> 
@@ -14,7 +14,7 @@
       <th>Name</th>
       <th>URL</th>
     </tr>
-    <%= @bookmarks.map { |x| '<tr><td>' + x.name + '</td><td>' + x.url + '</td></tr>' }.join('') %>
+    <%= @bookmarks.map { |x| '<tr><td>' + x.title + '</td><td>' + x.url + '</td></tr>' }.join('') %>
   </table>
 </body>
 </html>

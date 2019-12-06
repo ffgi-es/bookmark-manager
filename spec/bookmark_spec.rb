@@ -2,20 +2,12 @@ require 'bookmark'
 require 'pg'
 
 RSpec.describe Bookmark do
-  let(:database) { double :database, exec: [{ 'id' => 1, 'url' => 'url_1' }, 
-                                            { 'id' => 2, 'url' => 'url_2' },
-                                            { 'id' => 3, 'url' => 'url_3' }]
-  }
-  let(:name) { 'Name' }
+  let(:title) { 'Title' }
   let(:url) { 'URL' }
-  subject(:bookmark) { Bookmark.new(name, url) }
+  subject(:bookmark) { Bookmark.new(title, url) }
 
-  before(:each) do
-    allow(PG).to receive(:connect).and_return database
-  end
-
-  it 'should have a name' do
-    expect(subject).to have_attributes name: name
+  it 'should have a title' do
+    expect(subject).to have_attributes title: title
   end
 
   it 'should have a url' do
@@ -23,25 +15,22 @@ RSpec.describe Bookmark do
   end
 
   describe '.all' do
-    it 'should connect to the correct database' do
-      user = ENV['USER']
-
-      expect(PG).to receive(:connect).with({ dbname: 'bookmark_manager', user: user })
-      Bookmark.all
-    end
-
     it 'should return an array of bookmarks' do
-      arr = []
-      arr << Bookmark.new(1, 'url_1')
-      arr << Bookmark.new(2, 'url_2')
-      arr << Bookmark.new(3, 'url_3')
+      begin
+        connection = PG.connect dbname: 'bookmark_manager_test'
 
-      expect(Bookmark.all).to eq arr
-    end
+        connection.exec "INSERT INTO bookmarks (title, url) VALUES ('Test 1', 'http://www.test_1.com')"
+        connection.exec "INSERT INTO bookmarks (title, url) VALUES ('Test 2', 'http://www.test_2.com')"
+        connection.exec "INSERT INTO bookmarks (title, url) VALUES ('Test 3', 'http://www.test_3.com')"
+      ensure
+        connection.close if connection
+      end
 
-    it 'should call #exec on database with an sql command' do
-      expect(database).to receive(:exec).with('SELECT * FROM bookmarks')
-      Bookmark.all
+      bookmarks = Bookmark.all
+
+      expect(bookmarks).to include Bookmark.new('Test 1', 'http://www.test_1.com')
+      expect(bookmarks).to include Bookmark.new('Test 2', 'http://www.test_2.com')
+      expect(bookmarks).to include Bookmark.new('Test 3', 'http://www.test_3.com')
     end
   end
 end

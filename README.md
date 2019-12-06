@@ -11,10 +11,10 @@
 ### Class Diagram
 
 | Bookmark | BookmarkList |
-| --- | --- |
+|---|---|
 | `@url` | `@bookmarks` |
 | `@name` | |
-| - | - | 
+|-|-| 
 | `#create(name, url)` | `#show` | 
 |   | `#size` | 
 
@@ -33,4 +33,11 @@ Open the database with
 $ psql bookmark_manager
 ```
 
-And finally, create the bookmark table by using the command save to `db/migrations/01_create_bookmarks_table.sql`
+And finally, create the bookmark table by using the command in
+`db/migrations/01_create_bookmarks_table.sql`
+
+## Running the tests
+
+Before running the tests you need to setup a test database as well. Follow the
+same instructions above for creating the database but call the
+database `bookmark_manager_test`.
