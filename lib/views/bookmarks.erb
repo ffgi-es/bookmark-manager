@@ -12,7 +12,6 @@
   <table>
     <tr>
       <th>Name</th>
-      <th>URL</th>
     </tr>
     <% @bookmarks.each do |bmark| %>
       <tr>
@@ -22,6 +21,10 @@
             <form action='/bookmarks/delete' method='post'>
               <input type='hidden' name='id' value=<%=bmark.id%>>
               <input type=submit value='Delete'>
+            </form>
+            <form action='/bookmarks/update' method='get'>
+              <input type='hidden' name='id' value=<%=bmark.id%>>
+              <input type=submit value='Update'>
             </form>
           </div>
       </tr>

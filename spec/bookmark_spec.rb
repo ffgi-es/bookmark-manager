@@ -53,6 +53,7 @@ RSpec.describe Bookmark do
       expect(Bookmark.all).to include bookmark
     end
 
+=begin
     it 'should throw an exception if url is already saved' do
       pending
       Bookmark.create 'First Bookmark', 'https://this_url.com'
@@ -66,6 +67,7 @@ RSpec.describe Bookmark do
       expect { Bookmark.create 'First Bookmark', 'https://that_url.com' }
         .to raise_error DuplicateBookmarkError, "This title is already in use"
     end
+=end
   end
 
   describe ".delete" do
@@ -79,6 +81,25 @@ RSpec.describe Bookmark do
 
       expect(bookmarks.length).to eq 1
       expect(bookmarks).not_to include bookmark
+    end
+  end
+
+  describe ".find_by_id" do
+    it "identifies a specific bookmark by the id and returns it" do
+      bookmark = Bookmark.create 'Test 1', 'https://test_1.com'
+
+      expect(Bookmark.find_by_id bookmark.id).to eq bookmark
+    end
+  end
+
+  describe '.update' do
+    it 'updates the bookmark' do
+      bookmark = Bookmark.create 'Test 1', 'https://test_1.com'
+
+      new_bookmark = Bookmark.update(bookmark.id, 'Test 2', 'https://test_2.com')
+
+      expect(Bookmark.all).to include new_bookmark
+      expect(Bookmark.all).not_to include bookmark
     end
   end
 end

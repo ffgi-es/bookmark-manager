@@ -35,6 +35,22 @@ class Bookmark
     end
   end
 
+  def self.find_by_id id
+    rows = connect_to_db do |con|
+      con.exec "SELECT * FROM bookmarks WHERE id = #{id}"
+    end
+
+    Bookmark.new(rows[0]['id'], rows[0]['title'], rows[0]['url'])
+  end
+
+  def self.update id, title, url
+    rows = connect_to_db do |con|
+      con.exec "UPDATE bookmarks SET title='#{title}', url='#{url}' WHERE id=#{id} RETURNING id, title, url"
+    end
+
+    Bookmark.new(rows[0]['id'], rows[0]['title'], rows[0]['url'])
+  end
+
   private
 
   def self.connect_to_db
